@@ -1,62 +1,130 @@
 <!DOCTYPE html>
-<html>
-<head>
-<img src="movie night theme.jpg/css/styles.css">
-  <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
-      <script type="text/javascript" src="assets/javascript/game.js"></script>
-        <form id="hangman">
-          <input type="text" maxlength="1" minlength="1" name="letter" id="letter"
-            placeholder="Guess a letter"/>
-            <input id="guess" name="guess" type="submit" value="Guess" />
-              <button id="restart" name="restart" type="button">Restart</button>
-                </form>
-</head>
-<body>
-      <div id="gameBoard"></div>
-        <div id="gallows"></div>
-          <img id="gallowImg">
-            <h1>Hangman Movies Style!</h1>
-            <strong><h2>By Andrew Murriel</h2></strong>
-              <p>Select a letter below to guess what the word might be, or you can click the 'hint' button to get a clue. </p>
-  
-</div>
-        <div id="wordBox">
-          </div>
-            <div id="word">
-              </div>   
-                <span class="letter">_</span>
-        <div id="letters">  
-           <span class="letter clickable">A</span>
-           <span class="letter clickable">B</span>
-           <span class="letter clickable">C</span>
-           <span class="letter clickable">D</span>
-           <span class="letter clickable">E</span>
-           <span class="letter clickable">F</span> 
-           <span class="letter clickable">G</span>
-           <span class="letter clickable">H</span> 
-           <span class="letter clickable">I</span>
-           <span class="letter clickable">J</span> 
-           <span class="letter clickable">K</span>
-           <span class="letter clickable">L</span> 
-           <span class="letter clickable">M</span>
-           <span class="letter clickable">N</span> 
-           <span class="letter clickable">O</span>
-           <span class="letter clickable">P</span>
-           <span class="letter clickable">Q</span>
-           <span class="letter clickable">R</span>
-           <span class="letter clickable">S</span>
-           <span class="letter clickable">T</span> 
-           <span class="letter clickable">U</span>
-           <span class="letter clickable">V</span> 
-           <span class="letter clickable">W</span>
-           <span class="letter clickable">X</span> 
-           <span class="letter clickable">Y</span>
-           <span class="letter clickable">Z</span> 
-         </div>  
-      <button id="hint">Hint</button>
-      <button id="reset">Play again</button>
-      <button id="guess">Guess the answer</button>
+<HTML>
+<HEAD>
+		<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+		<script type="text/javascript" src="assets/javascript/game.js"></script>
+				<embed src="pirates.mp3" autostart="true" loop="true"
+        		width="2" height="0">
+        		</embed>
+<TITLE>Hangman</TITLE>
 
-</body>
-</html>
+<script LANGUAGE="JavaScript">
+gallows = new Array("--------\n|      |\n|\n|\n|\n|\n=====",
+"--------\n|      O\n|\n|\n|\n|\n=====",
+"--------\n|      O\n|      |\n|\n|\n|\n=====",
+"--------\n|      O\n|     \\|\n|\n|\n|\n=====",
+"--------\n|      O\n|     \\|/\n|\n|\n|\n=====",
+"--------\n|      O\n|     \\|/\n|      |\n|\n|\n=====",
+"--------\n|      O\n|     \\|/\n|      |\n|     /\n|\n=====",
+"--------\n|      O\n|     \\|/\n|      |\n|     / \\\n|\n=====")
+guessChoices = new
+Array("Mutiny","Pirate","Ship","Revenge","PARLAY","TREASURE","VOYAGE","SAVVY")
+function startAgain() {
+ guesses = 0
+ max = gallows.length-1
+ guessed = " "
+ len = guessChoices.length - 1
+ toGuess = guessChoices[Math.round(len*Math.random())].toUpperCase()
+ displayHangman()
+ displayToGuess()
+ displayGuessed()
+}
+function stayAway() {
+ document.game.elements[3].focus()
+ alert("ARGH MATEY! YAR BE TRYIN' AGAIN")
+}
+function displayHangman() {
+ document.game.status.value=gallows[guesses]
+}
+function displayToGuess() {
+ pattern=""
+ for(i=0;i<toGuess.length;++i) {
+  if(guessed.indexOf(toGuess.charAt(i)) != -1)
+   pattern += (toGuess.charAt(i)+" ")
+  else pattern += "_ "
+ }
+ document.game.toGuess.value=pattern
+}
+function displayGuessed() {
+ document.game.guessed.value=guessed
+}
+function badGuess(s) {
+ if(toGuess.indexOf(s) == -1) return true
+ return false
+}
+function winner() {
+ for(i=0;i<toGuess.length;++i) {
+  if(guessed.indexOf(toGuess.charAt(i)) == -1) return false
+ }
+ return true
+}
+function guess(s){
+ if(guessed.indexOf(s) == -1) guessed = s + guessed
+ if(badGuess(s)) ++guesses
+ displayHangman()
+ displayToGuess()
+ displayGuessed()
+ if(guesses >= max){
+ alert("SHIVER ME TIMBERS! WALK THE PLANK, MATEY! Word Wrong = "+toGuess+".")
+  startAgain()
+ }
+ if(winner()) {
+  alert("YO HO HO! A PIRATE'S LIFE BE FOR YOU!")
+  startAgain()
+ }
+}
+</script>
+</HEAD>
+
+<BODY>
+<h1>Captain Murriel's Hangman</h1>
+<img src="http://vignette3.wikia.nocookie.net/pirates/images/6/6a/AWEHangmansNoose.jpg/revision/latest?cb=20121003130159">
+<strong><h2>WELCOME MATEY! Choose a letter below to solve the pirate hangman expedition! BEWARE! If you choose the wrong letter, you might have to WALK THE PLANK!</h2></strong>
+<FORM NAME="game">
+<PRE>
+<TEXTAREA NAME="status" ROWS="20" COLS="50"
+ ONFOCUS="stayAway()"></TEXTAREA>
+</PRE><P>
+<INPUT TYPE="TEXT" NAME="toGuess"
+ ONFOCUS="stayAway()"> Word to guess<BR>
+<INPUT TYPE="TEXT" NAME="guessed"
+ ONFOCUS="stayAway()"> Letters guessed so far<BR>
+<P>Enter your next guess.</P>
+<INPUT TYPE="BUTTON" VALUE=" A " ONCLICK="guess('A')">
+<INPUT TYPE="BUTTON" VALUE=" B " ONCLICK="guess('B')">
+<INPUT TYPE="BUTTON" VALUE=" C " ONCLICK="guess('C')">
+<INPUT TYPE="BUTTON" VALUE=" D " ONCLICK="guess('D')">
+<INPUT TYPE="BUTTON" VALUE=" E " ONCLICK="guess('E')">
+<INPUT TYPE="BUTTON" VALUE=" F " ONCLICK="guess('F')">
+<INPUT TYPE="BUTTON" VALUE=" G " ONCLICK="guess('G')">
+<INPUT TYPE="BUTTON" VALUE=" H " ONCLICK="guess('H')">
+<INPUT TYPE="BUTTON" VALUE=" I " ONCLICK="guess('I')">
+<INPUT TYPE="BUTTON" VALUE=" J " ONCLICK="guess('J')">
+<INPUT TYPE="BUTTON" VALUE=" K " ONCLICK="guess('K')">
+<INPUT TYPE="BUTTON" VALUE=" L " ONCLICK="guess('L')">
+<INPUT TYPE="BUTTON" VALUE=" M " ONCLICK="guess('M')">
+<INPUT TYPE="BUTTON" VALUE=" N " ONCLICK="guess('N')">
+<INPUT TYPE="BUTTON" VALUE=" O " ONCLICK="guess('O')">
+<INPUT TYPE="BUTTON" VALUE=" P " ONCLICK="guess('P')">
+<INPUT TYPE="BUTTON" VALUE=" Q " ONCLICK="guess('Q')">
+<INPUT TYPE="BUTTON" VALUE=" R " ONCLICK="guess('R')">
+<INPUT TYPE="BUTTON" VALUE=" S " ONCLICK="guess('S')">
+<INPUT TYPE="BUTTON" VALUE=" T " ONCLICK="guess('T')">
+<INPUT TYPE="BUTTON" VALUE=" U " ONCLICK="guess('U')">
+<INPUT TYPE="BUTTON" VALUE=" V " ONCLICK="guess('V')">
+<INPUT TYPE="BUTTON" VALUE=" W " ONCLICK="guess('W')">
+<INPUT TYPE="BUTTON" VALUE=" X " ONCLICK="guess('X')">
+<INPUT TYPE="BUTTON" VALUE=" Y " ONCLICK="guess('Y')">
+<INPUT TYPE="BUTTON" VALUE=" Z " ONCLICK="guess('Z')"><P>
+<INPUT TYPE="BUTTON" NAME="restart" VALUE="---- Start Again ----"
+ ONCLICK="startAgain()">
+<SCRIPT LANGUAGE="JavaScript"><!--
+startAgain()
+// --></SCRIPT>
+</FORM>
+</BODY>
+
+<img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRu7WYrEXKdOFRfLmrNdF9SAuPjkjw_Lc1_b4nxtB0CCXVV8tw-">
+<footer>Created by Andrew Murriel</footer>
+</HTML>
+           
