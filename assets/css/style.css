@@ -1,6 +1,6 @@
 body {
-		background-color: red;
-		color: silver;
+		background-color: black;
+		color: red;
 }
 
 #gameBoard{
@@ -12,12 +12,15 @@ body {
 }
 
 #gallows 
-{
+{			width:475px, 550px(with margin);
+			height: 500px, 569px(with margin);
 
 }
 		
 #gallowImg
-{
+{			width: 474px, 550px(with margin);
+			height: 500px, 569px(with margin);
+
 
 }
 
@@ -26,9 +29,9 @@ body {
 {
 			text-align: center;
 			position: absolute;	
-			top: 400px;
-			left:5px;
-			right:5px;
+			top: 800px;
+			left:20px;
+			right:20px;
 }
 
 #word
@@ -42,16 +45,20 @@ body {
 }
 
 
-#letters
-{
-
+#text
+{display: inline-block;
+	font-family: courier, monospace
+	font-size: 100px;
+	border: solid;
+	padding: 5px 5px 5px 5px;
+	margin: 2px 0px 2px 0px;
 }
 
 .letter
 {
 	display: inline-block;
 	font-family: courier, monospace
-	font-size: 25px;
+	font-size: 100px;
 	border: solid;
 	padding: 5px 5px 5px 5px;
 	margin: 2px 0px 2px 0px;
