@@ -1,152 +1,66 @@
-var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-var word = "javascript".toUpperCase();
-var lettersLeft;
-var guesses = [];
-var guessesLeft = 8;
-var guessesWrong = 0;
-var loadingImg = true;
-
-var baseImgLocation 
-
-document.getElementsByTagName("body")[0].onload=initializeHangman;
-
-function initializeHangman()
-{
-  document.getElementsByTagName("body")[0].onkeyup = keyClickEvent;
-  document.getElementById("gallowImg").onload = imageLoaded;
-
-  // Assign click handler for letter guesses
-  var letters = document.getElementById("letters").getElementsByClassName("letter");
-  for( var i = 0; i < letters.length; i++ )
-  {
-    var letter = letters[i];
-    letter.onclick = mouseClickEvent;
-  }
-
-  // Display the word
-  lettersLeft = word.length;
-  var wordDiv = document.getElementById("word");
-  wordDiv.innerHTML = "";
-  for( var i = 0; i < word.length; i++ )
-  {
-    wordDiv.innerHTML += "<span class='letter'>_</span>";
-  }
-  
-  // Preload all state game images to avoid delays during game play
-  for( var i = 1; i <= guessesLeft; i++ )
-  {
-    preload(baseImgLocation + i + "_sm.png");
-  }
+<SCRIPT LANGUAGE="JavaScript"><!--
+gallows = new Array("--------\n|      |\n|\n|\n|\n|\n=====",
+"--------\n|      O\n|\n|\n|\n|\n=====",
+"--------\n|      O\n|      |\n|\n|\n|\n=====",
+"--------\n|      O\n|     \\|\n|\n|\n|\n=====",
+"--------\n|      O\n|     \\|/\n|\n|\n|\n=====",
+"--------\n|      O\n|     \\|/\n|      |\n|\n|\n=====",
+"--------\n|      O\n|     \\|/\n|      |\n|     /\n|\n=====",
+"--------\n|      O\n|     \\|/\n|      |\n|     / \\\n|\n=====")
+guessChoices = new
+Array("Mutiny","Pirate","Ship","Revenge")
+function startAgain() {
+ guesses = 0
+ max = gallows.length-1
+ guessed = " "
+ len = guessChoices.length - 1
+ toGuess = guessChoices[Math.round(len*Math.random())].toUpperCase()
+ displayHangman()
+ displayToGuess()
+ displayGuessed()
 }
-
-// View
-function updateImage(state)
-{
-  loadingImg = true;
-  document.getElementsByTagName('body')[0].style.cursor  = 'wait';
-
-  var gallowImg = document.getElementById("gallowImg");
-  gallowImg.src = baseImgLocation + state + "_sm.png";
+function stayAway() {
+ document.game.elements[3].focus()
+ alert("ARGH MATEY! YAR BE TRYIN' AGAIN")
 }
-
-function imageLoaded(event)
-{
-  loadingImg = false;
-  document.getElementsByTagName('body')[0].style.cursor = 'auto';
+function displayHangman() {
+ document.game.status.value=gallows[guesses]
 }
-
-// Control
-function keyClickEvent(event)
-{
-  choice(String.fromCharCode(event.keyCode))
+function displayToGuess() {
+ pattern=""
+ for(i=0;i<toGuess.length;++i) {
+  if(guessed.indexOf(toGuess.charAt(i)) != -1)
+   pattern += (toGuess.charAt(i)+" ")
+  else pattern += "_ "
+ }
+ document.game.toGuess.value=pattern
 }
-
-function mouseClickEvent(event)
-{
-  choice(event.target.textContent);
+function displayGuessed() {
+ document.game.guessed.value=guessed
 }
-
-function choice(letter)
-{
-  if( loadingImg )
-  {
-    console.log("Waiting for image to load, ignoring input.");
-  }
-
-  if( lettersLeft == 0 || guessesLeft == 0 )
-  {
-    console.log("Game over. Ignoring input.");
-    return;
-  }
-
-  var letterPos = alphabet.indexOf(letter);
-  if( letterPos < 0 )
-  {
-    console.log( letter + " is not a valid letter!");
-    return;
-  }
-
-  if( guesses.indexOf(letter) > -1 )
-  {
-    console.log("You already guessed that!");
-    return;
-  }
-  guesses.push(letter);
-
-  var letters = document.getElementById("letters").getElementsByClassName("letter");
-
-  if( word.indexOf(letter) > -1 ) // Correct guess
-  {
-    var wordLetters = document.getElementById("word").getElementsByClassName("letter");
-    var foundLetterIndex = -1;
-    while( (foundLetterIndex = word.indexOf(letter, foundLetterIndex+1)) > -1 )
-    {
-      lettersLeft--;
-      wordLetters[foundLetterIndex].textContent = letter;
-      wordLetters[foundLetterIndex].className = "letter correct";
-      letters[letterPos].onclick = undefined;
-      letters[letterPos].className = "letter correct";
-    }
-  }
-  else // Incorrect guess
-  {
-    guessesWrong++;
-    guessesLeft--;
-    letters[letterPos].onclick = undefined;
-    letters[letterPos].className = "letter wrong";
-    updateImage(guessesWrong);
-  }
-
-  if( guessesLeft == 0 )
-  {
-
-    // Reveal remaining letters (in .wrong)
-    var wordLetters = document.getElementById("word").getElementsByClassName("letter");
-    for( var i = 0; i < wordLetters.length; i++ )
-    {
-      var wordTile = wordLetters[i];
-      if( wordTile.textContent === "_" )
-      {
-        wordTile.textContent = word[i];
-        wordTile.className = "letter wrong";
-      }
-    }
-    alert("You Lose!");
-  }
-
-  if( lettersLeft == 0 )
-  {
-    alert("You Win!");
-  }
+function badGuess(s) {
+ if(toGuess.indexOf(s) == -1) return true
+ return false
 }
-
-function preload() 
-{
-  for (i = 0; i < preload.arguments.length; i++) 
-  {
-    images[i] = new Image();
-    images[i].src = preload.arguments[i];
-  }
- } 
-
-
+function winner() {
+ for(i=0;i<toGuess.length;++i) {
+  if(guessed.indexOf(toGuess.charAt(i)) == -1) return false
+ }
+ return true
+}
+function guess(s){
+ if(guessed.indexOf(s) == -1) guessed = s + guessed
+ if(badGuess(s)) ++guesses
+ displayHangman()
+ displayToGuess()
+ displayGuessed()
+ if(guesses >= max){
+ alert("SHIVER ME TIMBERS! WALK THE PLANK, MATEY! Word Wrong = "+toGuess+".")
+  startAgain()
+ }
+ if(winner()) {
+  alert("YO HO HO! A PIRATE'S LIFE BE FOR YOU!")
+  startAgain()
+ }
+}
+// --></SCRIPT>
